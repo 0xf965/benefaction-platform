@@ -4,8 +4,8 @@
 * R4     -> Block limit until allowed withdrawal or refund
 * R5     -> Minimum amount of Erg on contract to allow withdrawal
 * R6     -> ERG/Token exchange rate
-* R7     -> Address where the funds can be withdrawn
-* R8     -> devFee  tuple[%, address]
+* R7     -> Sha256 of the contract proposition bytes where the funds can be withdrawn
+* R8     -> devFee  tuple[%, contract proposition bytes]
 * R9     -> Link or hash that contains project information
 */
 {
@@ -23,10 +23,10 @@
     val sameExchangeRate = SELF.R6[Long].get == OUTPUTS(0).R6[Long].get
 
     // The project address must remain the same
-    val sameProjectAddress = SELF.R7[GroupElement].get == OUTPUTS(0).R7[GroupElement].get
+    val sameProjectAddress = SELF.R7[Coll[Byte]].get == OUTPUTS(0).R7[Coll[Byte]].get
 
     // The dev fee must be the same
-    val sameDevFee = SELF.R8[(Int, GroupElement)].get == OUTPUTS(0).R8[(Int, GroupElement)].get
+    val sameDevFee = SELF.R8[(Int, Coll[Byte])].get == OUTPUTS(0).R8[(Int, Coll[Byte])].get
 
     // The project link must be the same
     val sameProjectLink = SELF.R9[Coll[Byte]].get == OUTPUTS(0).R9[Coll[Byte]].get
@@ -109,17 +109,17 @@
   val projectAddress = OUTPUTS(1)
   
   val isToProjectAddress = {
-    val g: GroupElement = SELF.R7[GroupElement].get
-    val sigmaprop: SigmaProp = proveDlog(g)
+    val addrHash: Coll[Byte] = SELF.R7[Coll[Byte]].get
+    val isSamePropBytes: Boolean = addrHash == sha256(projectAddress.propositionBytes)
 
-    sigmaprop.propBytes == projectAddress.propositionBytes
+    isSamePropBytes
   }
 
   // Validation for withdrawing funds by project owners
   val isWithdrawFunds = {
-    val devData = OUTPUTS(0).R8[(Int, GroupElement)].get
+    val devData = OUTPUTS(0).R8[(Int, Coll[Byte])].get
     val devFee = devData._1
-    val devAddress = devData._2
+    val devAddress = devData._2  // <-- DevFee contract proposition bytes.
     // Check https://github.com/PhoenixErgo/phoenix-hodlcoin-contracts/blob/main/hodlERG/contracts/phoenix_fee_contract/v1/ergoscript/phoenix_v1_hodlerg_fee.es
     
 
@@ -149,9 +149,8 @@
     // TODO logic to check: No adds more than one type of token. No withdraw tokens.
 
     val isFromProjectAddress = {
-      val g: GroupElement = SELF.R7[GroupElement].get
-      val sigmaprop: SigmaProp = proveDlog(g)
-      val isSamePropBytes: Boolean = (sigmaprop.propBytes == INPUTS(1).propositionBytes)
+      val addrHash: Coll[Byte] = SELF.R7[Coll[Byte]].get
+      val isSamePropBytes: Boolean = (addrHash == sha256(INPUTS(1).propositionBytes))
       
       isSamePropBytes
     }
