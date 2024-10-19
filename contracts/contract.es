@@ -148,7 +148,7 @@
     val extractedValue: Long = {
       if (INPUTS.size > 1) {
         // In case where the project owners uses multiple boxes
-        projectAddress.value - INPUTS.slice(1, INPUTS.size).fold(0L, { (acc, box) => acc + box.value })
+        projectAddress.value - INPUTS.slice(1, INPUTS.size).fold(0L, { (acc: Long, box: Box) => acc + box.value })
       }
       else {
         projectAddress.value
