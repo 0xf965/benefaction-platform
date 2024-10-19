@@ -1,9 +1,9 @@
 <script lang="ts">
     import { submit_project } from '$lib/submit_project';
+    import { Slider } from 'spaper';
 
     // States for form fields
     let blockLimit: number;
-    let tokenAmount: number;
     let exchangeRate: number;
     let projectLink: string;
     let minimumSold: number;
@@ -22,23 +22,24 @@
         transactionId = null;
         
         try {
-        // Submit the project to the blockchain using the submit_project function
-        const result = await submit_project(blockLimit, tokenAmount, exchangeRate, projectLink, minimumSold);
-        
-        // Save the transactionId in case of success
-        transactionId = result;
+            // Submit the project to the blockchain using the submit_project function
+            const result = await submit_project(blockLimit, exchangeRate, projectLink, minimumSold);
+            
+            // Save the transactionId in case of success
+            transactionId = result;
         } catch (error) {
-        // Handle errors (if submission fails)
-        errorMessage = error.message || "Error occurred while submitting the project";
+            // Handle errors (if submission fails)
+            errorMessage = error.message || "Error occurred while submitting the project";
         } finally {
-        // Set "isSubmitting" back to false
-        isSubmitting = false;
+            // Set "isSubmitting" back to false
+            isSubmitting = false;
         }
     }
 
     async function getCurrentHeight() {
         try {
             current_height = await ergo.get_current_height();
+            console.log(current_height);
         } catch (error) {
             console.error("Error fetching current height:", error);
         }
@@ -94,11 +95,6 @@
         <div class="form-group">
             <label for="blockLimit">Block Limit</label>
             <input type="number" id="blockLimit" bind:value={blockLimit} min={current_height} placeholder="Enter block limit" required />
-        </div>
-        
-        <div class="form-group">
-            <label for="tokenAmount">Token Amount</label>
-            <input type="number" id="tokenAmount" bind:value={tokenAmount} placeholder="Enter token amount" required />
         </div>
         
         <div class="form-group">

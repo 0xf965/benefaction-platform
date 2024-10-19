@@ -11,7 +11,6 @@ import { stringToSerialized } from './utils';
 // Function to submit a project to the blockchain
 export async function submit_project(
     blockLimit: number,     // Block height until withdrawal/refund is allowed
-    tokenAmount: number,    // Amount of tokens being created
     exchangeRate: number,   // Exchange rate ERG/Token
     projectLink: string,    // Link or hash containing project information
     minimumSold: number     // Minimum amount sold to allow withdrawal
@@ -30,19 +29,24 @@ export async function submit_project(
         ergo_tree_address    // Address of the project contract
     );
 
+    const tokenAmount = 1000  // TODO needs to come from get_utxos
+
     // Minting a new token since tokenId is always null
     projectOutput.mintToken({
         amount: tokenAmount.toString() // Amount of tokens being minted
     });
 
+    const devAddress = "0xabcdefghijklmnñoqrstuvwxyz"
+    const devFeePercentage = 5
+
     // Set additional registers in the output box
     projectOutput.setAdditionalRegisters({
-        R4: '',
-        R5: stringToSerialized(blockLimit.toString()),      // Block limit for withdrawals/refunds
-        R6: stringToSerialized(exchangeRate.toString()),    // Exchange rate ERG/Token
-        R7: stringToSerialized(walletPk),                   // Withdrawal address (projectAddress is walletPk)
-        R8: stringToSerialized(projectLink),                // Link or hash with project info
-        R9: stringToSerialized(minimumSold.toString())      // Minimum amount sold
+        R4: stringToSerialized(blockLimit.toString()),                 // Block limit for withdrawals/refunds
+        R5: (stringToSerialized(minimumSold.toString()), stringToSerialized("0")),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
+        R6: stringToSerialized(exchangeRate.toString()),               // Exchange rate ERG/Token
+        R7: stringToSerialized(walletPk),                              // Withdrawal address (hash of walletPk)
+        R8: (stringToSerialized(devFeePercentage.toString()), stringToSerialized(devAddress)), // Developer fee tuple [percentage, address]
+        R9: stringToSerialized(projectLink)                            // Link or hash with project info
     });
 
     // Add the project box to the outputs list
