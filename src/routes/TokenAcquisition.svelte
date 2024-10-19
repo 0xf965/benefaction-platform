@@ -1,8 +1,8 @@
 <script lang="ts">
     import { explorer_uri, ergo_tree_hash } from '$lib/envs';
     import { fetch_projects } from '$lib/fetch'; // Asumiendo que fetch_projects está en $lib
-    import { hexToUtf8 } from '$lib/utils';
     import { onMount } from 'svelte';
+    import ProjectCard from './ProjectCard.svelte';
 
     // States for managing the fetched projects
     let projects: Map<string, any> | null = null;
@@ -39,13 +39,15 @@
         margin: 0 auto;
     }
     .project-list {
-        margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
     }
-    .project {
-        padding: 1rem;
-        border: 1px solid #ccc;
-        margin-bottom: 1rem;
-        background-color: #f9f9f9;
+
+    .card {
+        width: 300px;
+        margin: 0.5rem;
     }
     .error {
         color: red;
@@ -68,17 +70,15 @@
     {#if projects && !isLoading}
         <div class="project-list">
             {#each Array.from(projects) as [projectId, projectData]}
-                <div class="project">
-                    <h2>Project ID: {projectId}</h2>
-                    <!-- svelte-ignore a11y-missing-attribute -->
-                    <a>r4: {hexToUtf8(projectData.additionalRegisters.R4.renderedValue)}</a>
-                    <a>r5: {hexToUtf8(projectData.additionalRegisters.R5.renderedValue)}</a>
-                    <a>r6: {hexToUtf8(projectData.additionalRegisters.R6.renderedValue)}</a>
-                    <a>r7: {hexToUtf8(projectData.additionalRegisters.R7.renderedValue)}</a>
-                    <a>r8: {hexToUtf8(projectData.additionalRegisters.R8.renderedValue)}</a>
-                    <a>r9: {hexToUtf8(projectData.additionalRegisters.R9.renderedValue)}</a>
+                <div class="card">
+                    <!-- Renderiza una tarjeta ProjectCard para cada projectData -->
+                    <ProjectCard project={projectData} />
                 </div>
             {/each}
         </div>
+    {:else if isLoading}
+        <p>Loading projects...</p>
+    {:else}
+        <p>No projects found.</p>
     {/if}
 </div>

@@ -4,6 +4,8 @@
     https://api.ergoplatform.com/api/v1/docs/#operation/postApiV1BoxesUnspentSearch
 */
 
+import { hexToUtf8 } from "./utils";
+
 type RegisterValue = {
     renderedValue: string;
     serializedValue: string;
@@ -27,14 +29,23 @@ type ApiBox = {
     transactionId: string;
 };
 
+interface Project {  // TODO Should be imported.
+    token_id: string,
+    block_limit: number,
+    minimum_amount: number,
+    total_amount: number,
+    exchange_rate: number, 
+    link: string
+}
 
-export async function fetch_projects(explorer_uri: string, ergo_tree_template_hash: string, ergo: any): Promise<Map<string, any>> {
+
+export async function fetch_projects(explorer_uri: string, ergo_tree_template_hash: string, ergo: any): Promise<Map<string, Project>> {
     try {
         let params = {
             offset: 0,
             limit: 500,
         };
-        let projects = new Map<string, any>();
+        let projects = new Map<string, Project>();
         let moreDataAvailable = true;
         let registers = {};
 
@@ -63,9 +74,15 @@ export async function fetch_projects(explorer_uri: string, ergo_tree_template_ha
                     break;
                 }
                 for (const e of json_data.items) {
-                    console.log(e);
                     let token_id = e.assets[0].tokenId;
-                    projects.set(token_id, e)
+                    projects.set(token_id, {
+                        token_id: e.assets[0].tokenId.slice(0, 6),
+                        block_limit: parseInt(hexToUtf8(e.additionalRegisters.R4.renderedValue), 10),
+                        minimum_amount: parseInt(hexToUtf8(e.additionalRegisters.R5.renderedValue), 10),
+                        total_amount: e.assets[0].amount,
+                        exchange_rate: parseInt(hexToUtf8(e.additionalRegisters.R6.renderedValue), 10),
+                        link: hexToUtf8(e.additionalRegisters.R9.renderedValue) ?? ""
+                    })
                 }                
                 params.offset += params.limit;
             } 
