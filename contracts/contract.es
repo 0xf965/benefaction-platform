@@ -56,14 +56,19 @@
     // Verify if the token sold counter (second element of R5) is increased in proportion of the tokens sold.
     val incrementSoldCounterCorrectly = {
 
-      // Obtain the current and the next "tokens sold counter"
-      val selfAlreadySoldCounter = SELF.R5[(Long, Long)].get._2
-      val outputAlreadySoldCounter = OUTPUTS(0).R5[(Long, Long)].get._2
+      // Calculate how much the sold counter is incremented.
+      val counterIncrement = {
+        // Obtain the current and the next "tokens sold counter"
+        val selfAlreadySoldCounter = SELF.R5[(Long, Long)].get._2
+        val outputAlreadySoldCounter = OUTPUTS(0).R5[(Long, Long)].get._2
+
+        outputAlreadySoldCounter - selfAlreadySoldCounter
+      }
 
       // Calculate the extracted number of tokens from the contract
       val numberOfTokensBuyed = SELF.tokens(0)._2 - OUTPUTS(0).tokens(0)._2
 
-      numberOfTokensBuyed == outputAlreadySoldCounter - selfAlreadySoldCounter
+      numberOfTokensBuyed == counterIncrement
     }
 
     isSelfReplication && userHasTokens && correctExchange && incrementSoldCounterCorrectly
