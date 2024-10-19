@@ -1,13 +1,14 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { connectNautilus } from "$lib/connect";
-    import { address, network, connected, ergBalance } from "$lib/store";
+    import { address, connected, ergBalance, project_detail } from "$lib/store";
     import MyProjects from './MyProjects.svelte';
     import MyDonations from './MyDonations.svelte';
     import SubmitProject from './SubmitProject.svelte';
     import TokenAcquisition from './TokenAcquisition.svelte';
     import 'papercss/dist/paper.min.css'
     import { Navbar, Badge } from 'spaper';
+    import ProjectDetails from './ProjectDetails.svelte';
 
 
     let activeTab = 'acquireTokens'; // Default tab is "My Donations"
@@ -42,22 +43,29 @@
 </script>
 
 <div>
+
     <Navbar border={false} split={false} style="background-color: black; width: 80%">
         <h3 slot="brand">Benefaction <br/> Platform</h3>
-        <ul class="inline">
-            <li><a href="#" on:click={() => changeTab('acquireTokens')} 
-                style="color: orange; {activeTab === 'acquireTokens' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
-                Acquire Tokens</a></li>
-            <li><a href="#" on:click={() => changeTab('myDonations')} 
-                style="color: orange; {activeTab === 'myDonations' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
-                My Donations</a></li>
-            <li><a href="#" on:click={() => changeTab('myProjects')} 
-                style="color: orange; {activeTab === 'myProjects' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
-                My Projects</a></li>
-            <li><a href="#" on:click={() => changeTab('submitProject')} 
-                style="color: orange; {activeTab === 'submitProject' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
-                Submit Project</a></li>
-        </ul>
+        {#if $project_detail === null}
+            <ul class="inline">
+                <li><a href="#" on:click={() => changeTab('acquireTokens')} 
+                    style="color: orange; {activeTab === 'acquireTokens' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                    Acquire Tokens</a></li>
+                <li><a href="#" on:click={() => changeTab('myDonations')} 
+                    style="color: orange; {activeTab === 'myDonations' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                    My Donations</a></li>
+                <li><a href="#" on:click={() => changeTab('myProjects')} 
+                    style="color: orange; {activeTab === 'myProjects' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                    My Projects</a></li>
+                <li><a href="#" on:click={() => changeTab('submitProject')} 
+                    style="color: orange; {activeTab === 'submitProject' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                    Submit Project</a></li>
+            </ul>
+        {:else}
+            <ul class="inline">
+                <li><a>Project: {$project_detail.token_id.slice(0.6)}</a></li>
+            </ul>
+        {/if}
     </Navbar>
     
     <div class="wallet-info">
@@ -77,18 +85,21 @@
     {/if}
 
     
-
-    {#if activeTab === 'acquireTokens'}
-        <TokenAcquisition />
-    {/if}
-    {#if activeTab === 'myDonations'}
-        <MyDonations />
-    {/if}
-    {#if activeTab === 'myProjects'}
-        <MyProjects />
-    {/if}
-    {#if activeTab === 'submitProject'}
-        <SubmitProject />
+    {#if $project_detail === null}
+        {#if activeTab === 'acquireTokens'}
+            <TokenAcquisition />
+        {/if}
+        {#if activeTab === 'myDonations'}
+            <MyDonations />
+        {/if}
+        {#if activeTab === 'myProjects'}
+            <MyProjects />
+        {/if}
+        {#if activeTab === 'submitProject'}
+            <SubmitProject />
+        {/if}
+    {:else}
+        <ProjectDetails />
     {/if}
 </div>
 

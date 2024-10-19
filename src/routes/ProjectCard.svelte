@@ -1,6 +1,9 @@
 <script lang="ts">
 
-    interface Project {  // TODO Should be imported.
+    import {project_detail} from "$lib/store";
+    import { get } from "svelte/store";
+
+    interface Project {
         token_id: string,
         block_limit: number,
         minimum_amount: number,
@@ -11,6 +14,11 @@
 
     // Define 'project' as a prop of type Project
     export let project: Project;
+
+    function toggleDetails() {
+        // Get the current value of the store
+        project_detail.set(project);
+    }
 </script>
 
 <div class="card">
@@ -20,9 +28,8 @@
         <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
         <p><strong>Total Amount:</strong> {project.total_amount}</p>
         <p><strong>Exchange Rate:</strong> {project.exchange_rate}</p>
-        <a class="btn btn-primary" href={project.link} target="_blank" rel="noopener noreferrer">
-            View Project
-        </a>
+        <button class="btn-close" on:click={toggleDetails}>View</button>
+        
     </div>
 </div>
 
