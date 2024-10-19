@@ -7,6 +7,7 @@
     import SubmitProject from './SubmitProject.svelte';
     import TokenAcquisition from './TokenAcquisition.svelte';
     import 'papercss/dist/paper.min.css'
+    import { Navbar, Badge } from 'spaper';
 
 
     let activeTab = 'acquireTokens'; // Default tab is "My Donations"
@@ -40,91 +41,33 @@
 
 </script>
 
-<style>
-    .container {
-        padding: 20px;
-        background-color: #f0f0f0;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .title {
-        font-size: 2em;
-        margin-bottom: 20px;
-        text-align: center;
-        color: #333;
-    }
-
-    .wallet-info {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background: #ffffff;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        font-size: 0.9em;
-    }
-
-    .wallet-info p {
-        margin: 0;
-        color: #444;
-    }
-
-    .wallet-info p:hover {
-        text-decoration: none;
-    }
-
-    .nav-buttons {
-        display: flex;
-        justify-content: space-around;
-        margin: 20px 0;
-    }
-
-    .nav-button {
-        background-color: #e0e0e0;
-        border: 1px solid #ccc;
-        padding: 10px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        font-size: 1em;
-    }
-
-    .nav-button.active {
-        background-color: #ccc;
-        font-weight: bold;
-    }
-
-    .nav-button:hover {
-        background-color: #d0d0d0;
-        transform: scale(1.05);
-    }
-
-    .message {
-        position: absolute;
-        top: 60px;
-        left: 20px;
-        background: #28a745;
-        color: #fff;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 0.8em;
-        z-index: 1000;
-    }
-</style>
-
-<div class="container">
-    <div class="title">Benefaction Platform</div>
+<div>
+    <Navbar border={false} split={false} style="background-color: black; width: 80%">
+        <h3 slot="brand">Benefaction <br/> Platform</h3>
+        <ul class="inline">
+            <li><a href="#" on:click={() => changeTab('acquireTokens')} 
+                style="color: orange; {activeTab === 'acquireTokens' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                Acquire Tokens</a></li>
+            <li><a href="#" on:click={() => changeTab('myDonations')} 
+                style="color: orange; {activeTab === 'myDonations' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                My Donations</a></li>
+            <li><a href="#" on:click={() => changeTab('myProjects')} 
+                style="color: orange; {activeTab === 'myProjects' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                My Projects</a></li>
+            <li><a href="#" on:click={() => changeTab('submitProject')} 
+                style="color: orange; {activeTab === 'submitProject' ? 'border-bottom-color: orangered;' : 'border-bottom-color: orange;'}">
+                Submit Project</a></li>
+        </ul>
+    </Navbar>
     
     <div class="wallet-info">
         {#if $address}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class="identifier" id="walletIdentifier" on:click={copyToClipboard}>
-                <p>Wallet: {($address.slice(0, 6) + '...' + $address.slice(-4))}</p>
+                <Badge style="background-color: orange; color: black; font-size: 0.9em;">Wallet: {($address.slice(0, 6) + '...' + $address.slice(-4))}</Badge>
             </div>
         {/if}
-        <p>Balance: {ergInErgs} ERG</p>
+        <Badge style="background-color: orange; color: black; font-size: 0.9em;">Balance: {ergInErgs} ERG</Badge>
     </div>
 
     {#if showMessage}
@@ -133,20 +76,7 @@
         </div>
     {/if}
 
-    <div class="nav-buttons">
-        <button class="nav-button {activeTab === 'acquireTokens' ? 'active' : ''}" on:click={() => changeTab('acquireTokens')}>
-            Acquire Tokens
-        </button>
-        <button class="nav-button {activeTab === 'myDonations' ? 'active' : ''}" on:click={() => changeTab('myDonations')}>
-            My Donations
-        </button>
-        <button class="nav-button {activeTab === 'myProjects' ? 'active' : ''}" on:click={() => changeTab('myProjects')}>
-            My Projects
-        </button>
-        <button class="nav-button {activeTab === 'submitProject' ? 'active' : ''}" on:click={() => changeTab('submitProject')}>
-            Submit Project
-        </button>
-    </div>
+    
 
     {#if activeTab === 'acquireTokens'}
         <TokenAcquisition />
@@ -161,3 +91,30 @@
         <SubmitProject />
     {/if}
 </div>
+
+<style>
+    .container {
+        padding: 20px;
+        background-color: black;
+        width: 100% !important;
+    }
+
+    .wallet-info {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 15px;
+    }
+
+    .message {
+        position: absolute;
+        top: 60px;
+        left: 20px;
+        background: #28a745;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8em;
+        z-index: 1000;
+    }
+</style>
