@@ -143,29 +143,50 @@
 
   // Validation for withdrawing funds by project owners
   val isWithdrawFunds = {
-    val devData = OUTPUTS(0).R8[(Int, Coll[Byte])].get
-    val devFee = devData._1
-    val devAddress = devData._2  // <-- DevFee contract proposition bytes.
-    // Check https://github.com/PhoenixErgo/phoenix-hodlcoin-contracts/blob/main/hodlERG/contracts/phoenix_fee_contract/v1/ergoscript/phoenix_v1_hodlerg_fee.es
-    // TODO validate dev fee payment
+
+    // ERG extracted amount considering that the contract could not be replicated.
+    val extractedValue: Long = {
+      if (INPUTS.size > 1) {
+        // In case where the project owners uses multiple boxes
+        projectAddress.value - INPUTS.slice(1, INPUTS.size).fold(0L, { (acc, box) => acc + box.value })
+      }
+      else {
+        projectAddress.value
+      }
+    }
+
+    val correctDevFee = {
+      // Could be a dev prop bytes: https://github.com/PhoenixErgo/phoenix-hodlcoin-contracts/blob/main/hodlERG/contracts/phoenix_fee_contract/v1/ergoscript/phoenix_v1_hodlerg_fee.es
+      val devData = OUTPUTS(0).R8[(Int, Coll[Byte])].get
+      val devFee = devData._1
+      val devAddress = devData._2
+
+      val isToDevAddress = {
+        devAddress == OUTPUTS(2).propositionBytes
+      }
+
+      val devAmount = extractedValue * devFee / 100
+
+      devAmount == OUTPUTS(2).value && isToDevAddress
+    }
 
     // Replicate the contract in case of partial withdraw
     val endOrReplicate = {
-      val allFundsWithdrawn = projectAddress.value == SELF.value
+      val allFundsWithdrawn = extractedValue == SELF.value
 
       isSelfReplication || allFundsWithdrawn
     }
 
     // > Project owners are allowed to withdraw ERGs if and only if the minimum number of tokens has been sold. (The deadline plays no role here.)
     val minimumReached = {
-        val minData = SELF.R5[(Long, Long)].get
-        val minimumSalesThreshold = minData._1
-        val soldCounter = minData._2
+      val minData = SELF.R5[(Long, Long)].get
+      val minimumSalesThreshold = minData._1
+      val soldCounter = minData._2
 
-        soldCounter > minimumSalesThreshold
-      }
-
-    endOrReplicate && soldCounterRemainsConstant && isToProjectAddress && minimumReached
+      soldCounter > minimumSalesThreshold
+    }
+    
+    endOrReplicate && soldCounterRemainsConstant && isToProjectAddress && minimumReached && correctDevFee
   }
 
   // Can't withdraw ERG
