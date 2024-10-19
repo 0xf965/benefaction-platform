@@ -147,7 +147,7 @@
     val devFee = devData._1
     val devAddress = devData._2  // <-- DevFee contract proposition bytes.
     // Check https://github.com/PhoenixErgo/phoenix-hodlcoin-contracts/blob/main/hodlERG/contracts/phoenix_fee_contract/v1/ergoscript/phoenix_v1_hodlerg_fee.es
-    
+    // TODO validate dev fee payment
 
     // Replicate the contract in case of partial withdraw
     val endOrReplicate = {
