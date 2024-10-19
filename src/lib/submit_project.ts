@@ -6,7 +6,7 @@ import {
 } from '@fleet-sdk/core';
 
 import { ergo_tree_address } from './envs';
-import { stringToSerialized } from './utils';
+import { stringToSerialized, tupleToSerialized } from './utils';
 
 // Function to submit a project to the blockchain
 export async function submit_project(
@@ -42,10 +42,13 @@ export async function submit_project(
     // Set additional registers in the output box
     projectOutput.setAdditionalRegisters({
         R4: stringToSerialized(blockLimit.toString()),                 // Block limit for withdrawals/refunds
-        R5: (stringToSerialized(minimumSold.toString()), stringToSerialized("0")),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
+        R5: tupleToSerialized(minimumSold.toString(), "0"),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
         R6: stringToSerialized(exchangeRate.toString()),               // Exchange rate ERG/Token
         R7: stringToSerialized(walletPk),                              // Withdrawal address (hash of walletPk)
-        R8: (stringToSerialized(devFeePercentage.toString()), stringToSerialized(devAddress)), // Developer fee tuple [percentage, address]
+        R8: tupleToSerialized(
+            devFeePercentage.toString(), 
+            devAddress
+        ), // Developer fee tuple [percentage, address]
         R9: stringToSerialized(projectLink)                            // Link or hash with project info
     });
 

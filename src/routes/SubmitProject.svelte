@@ -1,6 +1,5 @@
 <script lang="ts">
     import { submit_project } from '$lib/submit_project';
-    import { Slider } from 'spaper';
 
     // States for form fields
     let blockLimit: number;

@@ -2,7 +2,7 @@ import { compile } from "@fleet-sdk/compiler";
 import { ErgoAddress, Network } from "@fleet-sdk/core";
 import { sha256, hex } from "@fleet-sdk/crypto";
 
-export const explorer_uri = "https://sigmaspace.io";
+export const explorer_uri = "https://api.ergoplatform.com";
 
 let contract = `
 {

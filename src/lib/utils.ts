@@ -1,4 +1,5 @@
 import { ErgoAddress, SBool, SByte, SColl, SConstant, SGroupElement } from "@fleet-sdk/core";
+import { SPair } from '@fleet-sdk/serializer';
 import { stringToBytes } from "@scure/base";
 import { connected } from "./store";
 import { get } from "svelte/store";
@@ -44,6 +45,16 @@ export function generate_pk_proposition(wallet_pk: string): string {
 
 export function stringToSerialized(value: string): string {
     return SConstant(SColl(SByte, stringToBytes('utf8', value)));
+}
+
+export function tupleToSerialized(value_1: string, value_2: string): string {
+    // return (SColl(SByte, stringToBytes('utf8', value_1)), SColl(SByte, stringToBytes('utf8', value_2)))
+    value_1 = SColl(SByte, stringToBytes('utf8', value_1));
+    value_2 = SColl(SByte, stringToBytes('utf8', value_2));
+    console.log(value_1)
+    console.log(value_2)
+    // let value = SConstant(SPair(value_1, value_2));
+    return SPair(value_1, value_2)
 }
 
 export function booleanToSerializer(value: boolean): string {
