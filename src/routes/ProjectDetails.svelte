@@ -1,7 +1,7 @@
 <script lang="ts">
     import { type Project, is_ended, min_raised } from "$lib/project";
     import { sha256 } from "$lib/sha256";
-    import { buy_project } from "$lib/buy";
+    import { exchange } from "$lib/exchange";
     import { address, connected, project_detail } from "$lib/store";
     import { Button, Progress, NumberInput } from "spaper";
 
@@ -64,7 +64,7 @@
 
     function buy() {
         console.log("Buying tokens:", value_submit);
-        buy_project(project, value_submit);
+        exchange(project, value_submit);
         show_submit = false;
     }
 
@@ -77,7 +77,7 @@
 
     function refund() {
         console.log("Refunding tokens:", value_submit);
-        // Add logic to call the appropriate function for refunding tokens
+        exchange(project, (-1)* value_submit);
         show_submit = false;
     }
 

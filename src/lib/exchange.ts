@@ -18,7 +18,7 @@ import { get } from 'svelte/store';
 import { address, ergBalance } from './store';
 
 // Function to submit a project to the blockchain
-export async function buy_project(
+export async function exchange(
     project: Project,
     token_amount: number
 ): Promise<string|null> {
