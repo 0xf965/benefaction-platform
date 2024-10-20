@@ -1,5 +1,6 @@
 <script lang="ts">
     import { submit_project } from '$lib/submit_project';
+    import { Button } from 'spaper';
 
     // States for form fields
     let blockLimit: number;
@@ -47,48 +48,9 @@
 
 </script>
 
-<style>
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    label {
-        font-weight: bold;
-    }
-    input {
-        width: 100%;
-        padding: 0.5rem;
-        margin-top: 0.25rem;
-    }
-    button {
-        padding: 0.75rem 1.5rem;
-        background-color: #2d89ef;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 1rem;
-    }
-    button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
-    .result {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        border: 1px solid #ccc;
-        background-color: #f9f9f9;
-    }
-    .error {
-        color: red;
-    }
-</style>
-
 <div>
     <div class="container">
-        <h1>Submit Your Project</h1>
+        <h1 class="title">Submit Your Project</h1>
         
         <!-- Input form for project parameters -->
         <div class="form-group">
@@ -112,9 +74,9 @@
         </div>
         
         <!-- Submit button -->
-        <button on:click={handleSubmit} disabled={isSubmitting}>
+        <Button on:click={handleSubmit} disabled={isSubmitting} style="background-color: orange; border: none;">
             {isSubmitting ? 'Submitting...' : 'Submit'}
-        </button>
+        </Button>
         
         <!-- Show result -->
         {#if transactionId}
@@ -131,3 +93,43 @@
         {/if}
         </div>
 </div>
+
+<style>
+    .container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .title {
+        font-size: 3em;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    label {
+        font-weight: bold;
+    }
+    input {
+        width: 100%;
+        padding: 0.5rem;
+        margin-top: 0.25rem;
+        color: orange;
+    }
+    input:focus {
+        outline: none !important;
+        border:1px solid orange;
+    }
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    .result {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+    }
+    .error {
+        color: red;
+    }
+</style>

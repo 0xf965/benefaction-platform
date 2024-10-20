@@ -6,6 +6,6 @@
         return ! is_ended(project)
     }
 </script>
-<ProjectList filterProject={projectFilter}>
+<ProjectList filterProject={null}>
     Available projects
 </ProjectList>

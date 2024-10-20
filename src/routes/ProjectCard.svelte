@@ -3,6 +3,7 @@
 
 
     import {project_detail} from "$lib/store";
+    import { Button } from "spaper";
 
     // Define 'project' as a prop of type Project
     export let project: Project;
@@ -33,7 +34,7 @@
         <p><strong>Tokens sold:</strong> {project.amount_sold}</p>
         <p><strong>Deadline passed:</strong> {deadline_passed ? "Yes": "No"}</p>
         <p><strong>Min value raised:</strong> {is_min_raised ? "Yes": "No"}</p>
-        <button class="btn-close" on:click={toggleDetails}>View</button>
+        <Button on:click={toggleDetails} style="background-color: orange; border: none; color: black">View</Button>
         
     </div>
 </div>
@@ -43,6 +44,7 @@
     .card {
         margin: 1rem 0;
         border: 1px solid #ddd;
+        color: white;
     }
 
     .card-body {
@@ -51,19 +53,5 @@
 
     .card-title {
         margin-bottom: 0.5rem;
-    }
-
-    .btn-primary {
-        background-color: #2196f3;
-        border-color: #2196f3;
-        color: #fff;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-    }
-
-    .btn-primary:hover {
-        background-color: #1976d2;
-        border-color: #1976d2;
     }
 </style>
