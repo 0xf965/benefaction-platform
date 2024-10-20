@@ -13,7 +13,7 @@ import { SPair } from '@fleet-sdk/serializer';
 import { ergo_tree_address } from './envs';
 import { stringToSerialized } from './utils';
 import { sha256 } from './sha256';
-import { Project } from './project';
+import { type Project } from './project';
 import { get } from 'svelte/store';
 import { address, ergBalance } from './store';
 
