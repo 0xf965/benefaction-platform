@@ -1,7 +1,9 @@
 <script lang="ts">
     import { type Project, is_ended, min_raised } from "$lib/project";
     import { sha256 } from "$lib/sha256";
-    import { buy_project } from "$lib/buy";
+    import { exchange } from "$lib/exchange";
+    import { withdraw } from "$lib/withdraw";
+    import { rebalance } from "$lib/rebalance";
     import { address, connected, project_detail } from "$lib/store";
     import { Button, Progress, NumberInput } from "spaper";
 
@@ -36,7 +38,7 @@
 
     function add_tokens() {
         console.log("Adding tokens:", value_submit);
-        // Add logic to call the appropriate function for adding tokens to the project
+        rebalance(project, value_submit);
         show_submit = false;
     }
 
@@ -49,7 +51,7 @@
 
     function withdraw_tokens() {
         console.log("Withdrawing tokens:", value_submit);
-        // Add logic to call the appropriate function for withdrawing tokens
+        rebalance(project, (-1) * value_submit);
         show_submit = false;
     }
 
@@ -62,7 +64,7 @@
 
     function withdraw_erg() {
         console.log("Withdrawing ERGs:", value_submit);
-        // Add logic to call the appropriate function for withdrawing ERGs
+        withdraw(project, value_submit);
         show_submit = false;
     }
 
@@ -76,7 +78,7 @@
 
     function buy() {
         console.log("Buying tokens:", value_submit);
-        buy_project(project, value_submit);
+        exchange(project, value_submit);
         show_submit = false;
     }
 
@@ -89,7 +91,7 @@
 
     function refund() {
         console.log("Refunding tokens:", value_submit);
-        // Add logic to call the appropriate function for refunding tokens
+        exchange(project, (-1)* value_submit);
         show_submit = false;
     }
 

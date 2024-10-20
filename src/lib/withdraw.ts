@@ -18,15 +18,13 @@ import { get } from 'svelte/store';
 import { address, ergBalance } from './store';
 
 // Function to submit a project to the blockchain
-export async function buy_project(
+export async function withdraw(
     project: Project,
-    token_amount: number
+    amount: number
 ): Promise<string|null> {
     
     console.log(project)
-    console.log("wants to buy ", token_amount)
-
-    let ergo_amount = token_amount * project.exchange_rate
+    console.log("wants withdraw ", amount)
 
     // Get the wallet address (will be the project address)
     const walletPk = await ergo.get_change_address();
@@ -37,16 +35,17 @@ export async function buy_project(
     // Building the project output
     let outputs: OutputBuilder[] = [];
     const contractOutput = new OutputBuilder(
-        project.value + ergo_amount,
+        project.value - amount,
         ergo_tree_address    // Address of the project contract
     );
 
     const devAddress = "0xabcdefghijklmnñoqrstuvwxyz";
     const devFeePercentage = 5;
+    let devAmount = amount * devFeePercentage/100;
 
     contractOutput.addTokens({
         tokenId: project.token_id,
-        amount: (project.total_amount - token_amount).toString()
+        amount: project.total_amount.toString()
     }, {sum: true});
 
     // Set additional registers in the output box
@@ -64,15 +63,16 @@ export async function buy_project(
     outputs.push(contractOutput);
 
     const userOutput = new OutputBuilder(
-        Number(get(ergBalance)) - ergo_amount,
+        Number(get(ergBalance))  + amount - devAmount,
         get(address)
-    )
-    .addTokens({
-        tokenId: project.token_id,
-        amount: token_amount.toString()
-    }, {sum: true});
-    
+    );
     outputs.push(userOutput);
+
+    const devOutput = new OutputBuilder(
+        devAmount,
+        devAddress
+    )
+    outputs.push(devOutput);
     
 
     // Building the unsigned transaction
