@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { submit_project } from '$lib/submit_project';
+    import { submit_project } from '$lib/submit';
     import { Button } from 'spaper';
 
     // States for form fields
