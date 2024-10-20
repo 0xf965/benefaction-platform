@@ -1,9 +1,9 @@
 <script>
     import ProjectList from "./project_list.svelte";
-    import is_ended from "$lib/project";
+   // import is_ended from "$lib/project";
 
-    const projectFilter = (project) => ! await is_ended(project);
+   // const projectFilter = (project) => ! await is_ended(project);
 </script>
-<ProjectList filterProject={projectFilter}>
+<ProjectList filterProject={null}>
     Available projects
 </ProjectList>
