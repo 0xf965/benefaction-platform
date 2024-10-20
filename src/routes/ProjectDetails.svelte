@@ -2,6 +2,7 @@
     import { type Project, is_ended, min_raised } from "$lib/project";
     import { sha256 } from "$lib/sha256";
     import { address, connected, project_detail } from "$lib/store";
+    import { Button } from "spaper";
 
 
     // Define 'project' as a prop of type Project
@@ -47,8 +48,14 @@
     checkIfIsOwner();
 </script>
 
+<div class="back">
+    <Button class="btn-primary" on:click={closePage}>&lt; Go to main</Button>
+</div>
+
 <!-- Main Project Detail Page -->
 <div class="project-detail">
+    
+
     <p><strong>Block Limit:</strong> {project.block_limit}</p>
     <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
     <p><strong>Total Amount:</strong> {project.total_amount}</p>
@@ -62,8 +69,8 @@
     <div class="actions">
         <!-- Project owner actions -->
         {#if is_owner}
-            <button class="btn-primary" on:click={increaseDonation}>Add tokens</button>
-            <button class="btn-primary" on:click={withdrawDonation}>Withdraw ERGs</button>
+            <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Add tokens</Button>
+            <Button style="background-color: orange; color: black; border: none;" on:click={withdrawDonation}>Withdraw ERGs</Button>
         {:else}
             <p><strong>Owner (sha256):</strong> {project.owner}</p>
         {/if}
@@ -71,23 +78,29 @@
 
         <!-- User actions -->
         {#if $connected}
-            <button class="btn-primary" on:click={increaseDonation}>Buy</button>
-            <button class="btn-primary" on:click={increaseDonation}>Increase Donation</button>
-            <button class="btn-primary" on:click={withdrawDonation}>Refund</button>
+            <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Buy</Button>
+            <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Increase Donation</Button>
+            <Button style="background-color: orange; color: black; border: none;" on:click={withdrawDonation}>Refund</Button>
         {/if}
 
         <!-- General actions -->
-        <button class="btn-primary" on:click={shareProject}>Share</button>
-        <button class="btn-secondary" on:click={closePage}>Go to main</button>
+        <Button style="background-color: orange; color: black; border: none;" on:click={shareProject}>Share</Button>
+        
     </div>
 </div>
 
 <style>
+    .back {
+        margin-top: 2rem;
+        margin-left: 3.5rem;
+        margin-bottom: 0rem;
+    }
 
     .project-detail {
-        margin: 2rem;
+        margin-left: 2rem;
         padding: 1.5rem;
         border-radius: 8px;
+        color: #ddd;
     }
 
     .btn-close {

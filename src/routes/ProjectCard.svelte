@@ -44,7 +44,7 @@
     .card {
         margin: 1rem 0;
         border: 1px solid #ddd;
-        color: white;
+        color: #ddd;
     }
 
     .card-body {
