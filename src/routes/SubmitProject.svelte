@@ -1,5 +1,6 @@
 <script lang="ts">
     import { submit_project } from '$lib/submit_project';
+    import { Button } from 'spaper';
 
     // States for form fields
     let blockLimit: number;
@@ -73,9 +74,9 @@
         </div>
         
         <!-- Submit button -->
-        <button on:click={handleSubmit} disabled={isSubmitting}>
+        <Button on:click={handleSubmit} disabled={isSubmitting} style="background-color: orange; border: none;">
             {isSubmitting ? 'Submitting...' : 'Submit'}
-        </button>
+        </Button>
         
         <!-- Show result -->
         {#if transactionId}
@@ -117,14 +118,6 @@
     input:focus {
         outline: none !important;
         border:1px solid orange;
-    }
-    button {
-        padding: 0.75rem 1.5rem;
-        background-color: orange;
-        color: black;
-        border: none;
-        cursor: pointer;
-        font-size: 1rem;
     }
     button:disabled {
         background-color: #ccc;

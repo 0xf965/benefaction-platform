@@ -55,27 +55,6 @@
     });
 </script>
 
-<style>
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    .project-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-    }
-
-    .card {
-        width: 300px;
-        margin: 0.5rem;
-    }
-    .error {
-        color: red;
-    }
-</style>
-
 <div class="container">
     <h1><slot></slot></h1>
 
@@ -103,3 +82,24 @@
         <p>No projects found.</p>
     {/if}
 </div>
+
+<style>
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .project-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .card {
+        width: 400px;
+        margin: 0.5rem;
+    }
+    .error {
+        color: red;
+    }
+</style>
