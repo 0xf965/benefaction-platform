@@ -3,48 +3,47 @@
     import { sha256 } from "$lib/sha256";
     import { buy_project } from "$lib/buy";
     import { address, connected, project_detail } from "$lib/store";
-    import { Button, Progress } from "spaper";
+    import { Button, Progress, NumberInput } from "spaper";
 
 
     // Define 'project' as a prop of type Project
     let project: Project = $project_detail;
 
     // States for amounts
-    let token_amount = 0;
-    let refund_amount = 0;
-    let add_tokens_amount = 0;
-    let withdraw_tokens_amount = 0;
-    let withdraw_erg_amount = 0;
+    let show_submit = true;
+    let label_submit = "";
+    let function_submit = null;
+    let value_submit = 0;
 
     // Project owner actions
     function add_tokens() {
             // Logic for adding tokens by the project owner
-            console.log("Adding tokens:", add_tokens_amount);
+            console.log("Adding tokens:", value_submit);
             // Add logic to call the appropriate function for adding tokens to the project
         }
 
         function withdraw_tokens() {
             // Logic for withdrawing tokens by the project owner
-            console.log("Withdrawing tokens:", withdraw_tokens_amount);
+            console.log("Withdrawing tokens:", value_submit);
             // Add logic to call the appropriate function for withdrawing tokens
         }
 
         function withdraw_erg() {
             // Logic for withdrawing ERGs by the project owner
-            console.log("Withdrawing ERGs:", withdraw_erg_amount);
+            console.log("Withdrawing ERGs:", value_submit);
             // Add logic to call the appropriate function for withdrawing ERGs
         }
 
         // User actions
         function buy() {
             // Call buy_project function with the specified amount
-            console.log("Buying tokens:", token_amount);
-            buy_project(project, token_amount);
+            console.log("Buying tokens:", value_submit);
+            buy_project(project, value_submit);
         }
 
         function refund() {
             // Logic for refunding tokens to get ERG back
-            console.log("Refunding tokens:", refund_amount);
+            console.log("Refunding tokens:", show_submit);
             // Add logic to call the appropriate function for refunding tokens
         }
 
@@ -121,6 +120,17 @@
             <Button style="background-color: orange; color: black; border: none;" on:click={shareProject}>Share</Button>
             
         </div>
+
+        {#if show_submit}
+            <div>
+                <NumberInput
+                    bind:value={value_submit}
+                    label={label_submit}
+                    min="0"
+                />
+                <Button style="background-color: orange; color: black; border: none;" on:click={function_submit}>Submit</Button>
+            </div>
+        {/if}
     </div>
 
     <div class="progress">
