@@ -1,17 +1,8 @@
 <script lang="ts">
+    import type { Project } from "$lib/project";
+
 
     import {project_detail} from "$lib/store";
-    import { get } from "svelte/store";
-
-    interface Project {
-        token_id: string,
-        block_limit: number,
-        minimum_amount: number,
-        total_amount: number,
-        exchange_rate: number, 
-        link: string,
-        owner: string
-    }
 
     // Define 'project' as a prop of type Project
     export let project: Project;

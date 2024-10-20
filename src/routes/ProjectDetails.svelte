@@ -1,16 +1,8 @@
 <script lang="ts">
+    import type { Project } from "$lib/project";
     import { sha256 } from "$lib/sha256";
     import { address, connected, project_detail } from "$lib/store";
 
-    interface Project {
-        token_id: string;
-        block_limit: number;
-        minimum_amount: number;
-        total_amount: number;
-        exchange_rate: number; 
-        link: string;
-        owner: string
-    }
 
     // Define 'project' as a prop of type Project
     let project: Project = $project_detail;

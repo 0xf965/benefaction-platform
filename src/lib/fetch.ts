@@ -4,6 +4,7 @@
     https://api.ergoplatform.com/api/v1/docs/#operation/postApiV1BoxesUnspentSearch
 */
 
+import type { Project } from "./project";
 import { hexToUtf8 } from "./utils";
 
 type RegisterValue = {
@@ -28,16 +29,6 @@ type ApiBox = {
     index: number;
     transactionId: string;
 };
-
-interface Project {  // TODO Should be imported.
-    token_id: string,
-    block_limit: number,
-    minimum_amount: number,
-    total_amount: number,
-    exchange_rate: number, 
-    link: string,
-    owner: string
-}
 
 
 export async function fetch_projects(explorer_uri: string, ergo_tree_template_hash: string, ergo: any): Promise<Map<string, Project>> {
