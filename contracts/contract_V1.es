@@ -16,12 +16,8 @@
     // The block limit must be the same
     val sameBlockLimit = SELF.R4[Int].get == OUTPUTS(0).R4[Int].get
 
-    // The minimum amount of tokens sold must be the same
-    val sameMinimumSold = SELF.R5[Coll[Long]].get(1) == OUTPUTS(0).R5[Coll[Long]].get(1)
-
-    // R5 registry must contain the minimum amount of tokens and the token sold counter exclusively
-    val correctR5 = SELF.R5[Coll[Long]].get.size == OUTPUTS(0).R5[Coll[Long]].get.size && SELF.R5[Coll[Long]].get.size == 2
-
+    // The minimum amount of tokens sold must be the same.
+    val sameMinimumSold = SELF.R5[(Long, Long)].get._1 == OUTPUTS(0).R5[(Long, Long)].get._1
 
     // The ERG/Token exchange rate must be same
     val sameExchangeRate = SELF.R6[Long].get == OUTPUTS(0).R6[Long].get
@@ -30,7 +26,7 @@
     val sameProjectAddress = SELF.R7[Coll[Byte]].get == OUTPUTS(0).R7[Coll[Byte]].get
 
     // The dev fee must be the same
-    val sameDevFee = SELF.R8[(Int, Coll[Byte])].get == OUTPUTS(0).R8[(Int, Coll[Byte])].get  // TODO Maybe, the devFee could be a constant.
+    val sameDevFee = SELF.R8[(Int, Coll[Byte])].get == OUTPUTS(0).R8[(Int, Coll[Byte])].get
 
     // The project link must be the same
     val sameProjectLink = SELF.R9[Coll[Byte]].get == OUTPUTS(0).R9[Coll[Byte]].get
@@ -39,7 +35,7 @@
     val sameScript = SELF.propositionBytes == OUTPUTS(0).propositionBytes
 
     // Verify that the output box is a valid copy of the input box
-    sameBlockLimit && sameMinimumSold && correctR5 && sameExchangeRate && sameProjectAddress && sameDevFee && sameProjectLink && sameScript
+    sameBlockLimit && sameMinimumSold && sameExchangeRate && sameProjectAddress && sameDevFee && sameProjectLink && sameScript
   }
 
   // Validation for purchasing Tokens
@@ -63,8 +59,8 @@
       // Calculate how much the sold counter is incremented.
       val counterIncrement = {
         // Obtain the current and the next "tokens sold counter"
-        val selfAlreadySoldCounter = SELF.R5[Coll[Long]].get(2)
-        val outputAlreadySoldCounter = OUTPUTS(0).R5[Coll[Long]].get(2)
+        val selfAlreadySoldCounter = SELF.R5[(Long, Long)].get._2
+        val outputAlreadySoldCounter = OUTPUTS(0).R5[(Long, Long)].get._2
 
         outputAlreadySoldCounter - selfAlreadySoldCounter
       }
@@ -78,7 +74,7 @@
     isSelfReplication && userHasTokens && correctExchange && incrementSoldCounterCorrectly
   }
 
-  val soldCounterRemainsConstant = SELF.R5[Coll[Long]].get(2) == OUTPUTS(0).R5[Coll[Long]].get(2)
+  val soldCounterRemainsConstant = SELF.R5[(Long, Long)].get._2 == OUTPUTS(0).R5[(Long, Long)].get._2
 
   // Validation for refunding tokens
   val isRefundTokens = {
@@ -89,8 +85,9 @@
     val canBeRefund = {
       // The minimum number of tokens has not been sold.
       val minimumNotReached = {
-        val minimumSalesThreshold = SELF.R5[Coll[Long]].get(1)
-        val soldCounter = SELF.R5[Coll[Long]].get(2)
+        val minData = SELF.R5[(Long, Long)].get
+        val minimumSalesThreshold = minData._1
+        val soldCounter = minData._2
 
         soldCounter < minimumSalesThreshold
       }
@@ -182,8 +179,9 @@
 
     // > Project owners are allowed to withdraw ERGs if and only if the minimum number of tokens has been sold. (The deadline plays no role here.)
     val minimumReached = {
-      val minimumSalesThreshold = SELF.R5[Coll[Long]].get(1)
-      val soldCounter = SELF.R5[Coll[Long]].get(2)
+      val minData = SELF.R5[(Long, Long)].get
+      val minimumSalesThreshold = minData._1
+      val soldCounter = minData._2
 
       soldCounter > minimumSalesThreshold
     }
