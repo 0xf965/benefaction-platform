@@ -60,7 +60,7 @@
         <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
         <p><strong>Total Amount:</strong> {project.total_amount}</p>
         <p><strong>Exchange Rate:</strong> {project.exchange_rate}</p>
-        <p><strong>ERGs collected:</strong> {project.reserve}</p>
+        <p><strong>ERGs collected:</strong> {project.value}</p>
         <p><strong>Tokens sold:</strong> {project.amount_sold}</p>
         <p><strong>Deadline passed:</strong> {deadline_passed ? "Yes": "No"}</p>
         <p><strong>Min value raised:</strong> {is_min_raised ? "Yes": "No"}</p>

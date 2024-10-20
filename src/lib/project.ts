@@ -1,10 +1,11 @@
 
 export interface Project {
+    box: any,
     token_id: string,
     block_limit: number,
     minimum_amount: number,
     amount_sold: number,
-    reserve: number,  // erg reserve
+    value: number,  // erg reserve
     total_amount: number,
     exchange_rate: number, 
     link: string,
