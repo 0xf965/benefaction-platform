@@ -8,6 +8,7 @@ import {
     SColl,
     SByte
 } from '@fleet-sdk/core';
+import { SPair } from '@fleet-sdk/serializer';
 
 import { ergo_tree_address } from './envs';
 import { stringToSerialized } from './utils';
@@ -44,16 +45,20 @@ export async function submit_project(
     const devAddress = "0xabcdefghijklmnñoqrstuvwxyz"
     const devFeePercentage = 5
 
+    /*  https://discord.com/channels/668903786361651200/669989266478202917/1297529728504303647    Don't work, Nautilus wallet dont allow to sign.
+
+    R5: SConstant(SPair(
+            SLong(BigInt(minimumSold)), 
+            SLong(BigInt(0))
+        )),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
+
+
+    */
+
     // Set additional registers in the output box
     projectOutput.setAdditionalRegisters({
         R4: stringToSerialized(blockLimit.toString()),                 // Block limit for withdrawals/refunds
-        R5: SConstant(SColl(
-            SByte,
-            [
-                SLong(BigInt(minimumSold)), 
-                SLong(BigInt(0))
-            ]
-        )),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
+        R5: stringToSerialized(minimumSold.toString()),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
         R6: stringToSerialized(exchangeRate.toString()),               // Exchange rate ERG/Token
         R7: stringToSerialized(await sha256(walletPk)),               // Withdrawal address (hash of walletPk)
         R8: stringToSerialized(devAddress), // Developer fee tuple [percentage, address]
