@@ -66,6 +66,7 @@ export async function fetch_projects(explorer_uri: string, ergo_tree_template_ha
                     break;
                 }
                 for (const e of json_data.items) {
+                    console.log(e)
                     let token_id = e.assets[0].tokenId;
                     projects.set(token_id, {
                         token_id: e.assets[0].tokenId.slice(0, 6),
@@ -74,7 +75,9 @@ export async function fetch_projects(explorer_uri: string, ergo_tree_template_ha
                         total_amount: e.assets[0].amount,
                         exchange_rate: parseInt(hexToUtf8(e.additionalRegisters.R6.renderedValue), 10),
                         link: hexToUtf8(e.additionalRegisters.R9.renderedValue) ?? "",
-                        owner: hexToUtf8(e.additionalRegisters.R7.renderedValue) ?? ""
+                        owner: hexToUtf8(e.additionalRegisters.R7.renderedValue) ?? "",
+                        reserve: e.value / 1000000000,
+                        amount_sold: parseInt(hexToUtf8(e.additionalRegisters.R5.renderedValue), 10),
                     })
                 }                
                 params.offset += params.limit;

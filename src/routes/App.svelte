@@ -38,6 +38,18 @@
         }
     }
 
+    let current_height: number | null = null;
+
+    async function getCurrentHeight() {
+        try {
+            current_height = await ergo.get_current_height();
+            console.log(current_height);
+        } catch (error) {
+            console.error("Error fetching current height:", error);
+        }
+    }
+    getCurrentHeight();
+
     $: ergInErgs = $ergBalance ? ($ergBalance / 1_000_000_000).toFixed(4) : 0;
 
 </script>
@@ -77,6 +89,8 @@
         {/if}
         <Badge style="background-color: orange; color: black; font-size: 0.9em;">Balance: {ergInErgs} ERG</Badge>
     </div>
+
+    <Badge style="background-color: orange; color: black; font-size: 0.9em;">Height: {current_height}</Badge> <!-- This makes sense with the wallet info.   (is the current block.)-->
 
     {#if showMessage}
         <div class="message">

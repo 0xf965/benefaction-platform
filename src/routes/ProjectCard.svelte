@@ -1,11 +1,20 @@
 <script lang="ts">
-    import type { Project } from "$lib/project";
+    import { is_ended, min_raised, type Project } from "$lib/project";
 
 
     import {project_detail} from "$lib/store";
 
     // Define 'project' as a prop of type Project
     export let project: Project;
+
+    let deadline_passed = false;
+    let is_min_raised = false;
+    async function load()
+    {
+        deadline_passed = await is_ended(project);
+        is_min_raised = await min_raised(project)
+    }
+    load()
 
     function toggleDetails() {
         // Get the current value of the store
@@ -20,6 +29,10 @@
         <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
         <p><strong>Total Amount:</strong> {project.total_amount}</p>
         <p><strong>Exchange Rate:</strong> {project.exchange_rate}</p>
+        <p><strong>ERGs collected:</strong> {project.reserve}</p>
+        <p><strong>Tokens sold:</strong> {project.amount_sold}</p>
+        <p><strong>Deadline passed:</strong> {deadline_passed ? "Yes": "No"}</p>
+        <p><strong>Min value raised:</strong> {is_min_raised ? "Yes": "No"}</p>
         <button class="btn-close" on:click={toggleDetails}>View</button>
         
     </div>

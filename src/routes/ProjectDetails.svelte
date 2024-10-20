@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Project } from "$lib/project";
+    import { type Project, is_ended, min_raised } from "$lib/project";
     import { sha256 } from "$lib/sha256";
     import { address, connected, project_detail } from "$lib/store";
 
@@ -31,6 +31,15 @@
         project_detail.set(null);
     }
 
+    let deadline_passed = false;
+    let is_min_raised = false;
+    async function load()
+    {
+        deadline_passed = await is_ended(project);
+        is_min_raised = await min_raised(project)
+    }
+    load()
+
     let is_owner = false;
     async function checkIfIsOwner() {
         is_owner = $connected && await sha256($address ?? "") === project.owner;
@@ -44,6 +53,10 @@
     <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
     <p><strong>Total Amount:</strong> {project.total_amount}</p>
     <p><strong>Exchange Rate:</strong> {project.exchange_rate}</p>
+    <p><strong>ERGs collected:</strong> {project.reserve}</p>
+    <p><strong>Tokens sold:</strong> {project.amount_sold}</p>
+    <p><strong>Deadline passed:</strong> {deadline_passed ? "Yes": "No"}</p>
+    <p><strong>Min value raised:</strong> {is_min_raised ? "Yes": "No"}</p>
 
     <!-- Action Buttons -->
     <div class="actions">
