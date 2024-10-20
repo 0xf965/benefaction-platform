@@ -8,6 +8,18 @@
     // Define 'project' as a prop of type Project
     let project: Project = $project_detail;
 
+    // TODO Valores ficticios
+    let currentVal = 2000;
+    let min = 5000;
+    let max = 10000;
+    let percentage = (currentVal * 100 / (min * 2));
+    let typeProgress = 'secondary';
+    if(currentVal < min) {
+        typeProgress = 'danger'; 
+    } else if(currentVal >= max) {
+        typeProgress = 'success';
+    }
+
     // States for amounts
     let show_submit = false;
     let label_submit = "";
@@ -181,13 +193,20 @@
         {/if}
     </div>
 
-    <div class="progress">
-        <Progress value="20" type="primary" />
+    <div class="extra">
+        <div class="progress">
+            <Progress value="{percentage}" type="{typeProgress}" style="color: black;">Current: {currentVal}</Progress>
+        </div>
+        
+        <br/>
+        <span style="color:white">
+            Minimum Amount: {min} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Maximum Amount: {max}
+        </span>
     </div>
 </div>
 
 <style>
-       .back {
+    .back {
         margin-top: 2rem;
         margin-left: 3.5rem;
         margin-bottom: 0rem;
@@ -200,6 +219,10 @@
         color: #ddd;
         display: flex;
         flex-direction: row;
+    }
+
+    .extra {
+        width: 800px;
     }
 
     .btn-close {
