@@ -3,9 +3,10 @@
     import { fetch_projects } from '$lib/fetch'; // Asumiendo que fetch_projects está en $lib
     import { onMount } from 'svelte';
     import ProjectCard from './ProjectCard.svelte';
+    import {type Project } from '$lib/project';
 
     // States for managing the fetched projects
-    let projects: Map<string, any> | null = null;
+    let projects: Map<string, Project> | null = null;
     let errorMessage: string | null = null;
     let isLoading: boolean = true;
 
@@ -13,21 +14,40 @@
     let explorerUri: string = explorer_uri; // Cambia esto por el URI correcto
     let ergoTreeTemplateHash: string = ergo_tree_hash; // Cambia por el hash correcto
 
-    export let filterProject: ((project: any) => boolean) | null = null;
+    export let filterProject: ((project: any) => Promise<boolean>) | null = null;
 
     // Function to fetch the projects
     async function loadProjects() {
         try {
             // Fetch the projects using the fetch_projects function
-            projects = await fetch_projects(explorerUri, ergoTreeTemplateHash, await ergo);
+            const projectsList: Map<string, Project>= await fetch_projects(explorerUri, ergoTreeTemplateHash, await ergo);
+            const filteredProjectsMap = new Map<string, Project>();
+
+            // Iteramos sobre los proyectos y aplicamos el filtro si existe
+            for (const [id, project] of projectsList.entries()) {
+                let shouldAdd = true;
+
+                // Si filterProject está definido, aplicamos el filtro al proyecto actual
+                if (filterProject) {
+                    shouldAdd = await filterProject(project);
+                }
+
+                // Solo agregamos el proyecto si pasa el filtro (o si no hay filtro)
+                if (shouldAdd) {
+                    filteredProjectsMap.set(id, project);
+                }
+            }
+
+            // Asignamos los proyectos filtrados al Map de proyectos
+            projects = filteredProjectsMap;
         } catch (error) {
             // Handle errors (if fetching fails)
             errorMessage = error.message || "Error occurred while fetching projects";
-        } finally {
+        } finally { 
             // Set "isLoading" back to false
             isLoading = false;
         }
-    }
+}
 
     // Fetch the projects when the component is mounted
     onMount(() => {
@@ -72,12 +92,9 @@
     {#if projects && !isLoading}
         <div class="project-list">
             {#each Array.from(projects) as [projectId, projectData]}
-                {#if !filterProject || filterProject(projectData)}
-                    <div class="card">
-                        <!-- Renderiza una tarjeta ProjectCard para cada projectData -->
-                        <ProjectCard project={projectData} />
-                    </div>
-                {/if}
+                <div class="card">
+                    <ProjectCard project={projectData} />
+                </div>
             {/each}
         </div>
     {:else if isLoading}
