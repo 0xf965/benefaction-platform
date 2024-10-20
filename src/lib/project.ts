@@ -9,6 +9,7 @@ export interface Project {
     total_amount: number,
     exchange_rate: number, 
     link: string,
+    owner: string
 }
 
 export async function is_ended(project: Project): Promise<boolean> {

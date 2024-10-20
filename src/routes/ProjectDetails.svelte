@@ -1,6 +1,7 @@
 <script lang="ts">
     import { type Project, is_ended, min_raised } from "$lib/project";
     import { sha256 } from "$lib/sha256";
+    import { buy_project } from "$lib/buy";
     import { address, connected, project_detail } from "$lib/store";
     import { Button, Progress } from "spaper";
 
@@ -8,17 +9,44 @@
     // Define 'project' as a prop of type Project
     let project: Project = $project_detail;
 
-    // Function to handle increasing donation
-    function increaseDonation() {
-        // Logic to increase donation
-        console.log("Increasing donation");
-    }
+    // States for amounts
+    let token_amount = 0;
+    let refund_amount = 0;
+    let add_tokens_amount = 0;
+    let withdraw_tokens_amount = 0;
+    let withdraw_erg_amount = 0;
 
-    // Function to handle withdrawing donation
-    function withdrawDonation() {
-        // Logic to withdraw donation
-        console.log("Withdrawing donation");
-    }
+    // Project owner actions
+    function add_tokens() {
+            // Logic for adding tokens by the project owner
+            console.log("Adding tokens:", add_tokens_amount);
+            // Add logic to call the appropriate function for adding tokens to the project
+        }
+
+        function withdraw_tokens() {
+            // Logic for withdrawing tokens by the project owner
+            console.log("Withdrawing tokens:", withdraw_tokens_amount);
+            // Add logic to call the appropriate function for withdrawing tokens
+        }
+
+        function withdraw_erg() {
+            // Logic for withdrawing ERGs by the project owner
+            console.log("Withdrawing ERGs:", withdraw_erg_amount);
+            // Add logic to call the appropriate function for withdrawing ERGs
+        }
+
+        // User actions
+        function buy() {
+            // Call buy_project function with the specified amount
+            console.log("Buying tokens:", token_amount);
+            buy_project(project, token_amount);
+        }
+
+        function refund() {
+            // Logic for refunding tokens to get ERG back
+            console.log("Refunding tokens:", refund_amount);
+            // Add logic to call the appropriate function for refunding tokens
+        }
 
     // Function to handle sharing the project
     function shareProject() {
@@ -69,8 +97,11 @@
         <div class="actions">
             <!-- Project owner actions -->
             {#if is_owner}
-                <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Add tokens</Button>
-                <Button style="background-color: orange; color: black; border: none;" on:click={withdrawDonation}>Withdraw ERGs</Button>
+                <Button style="background-color: orange; color: black; border: none;" on:click={add_tokens}>Add tokens</Button>
+                <Button style="background-color: orange; color: black; border: none;" on:click={withdraw_tokens}>Withdraw tokens</Button>
+                {#if deadline_passed && is_min_raised}
+                    <Button style="background-color: orange; color: black; border: none;" on:click={withdraw_erg}>Withdraw ERGs</Button>
+                {/if}
             {:else}
                 <p><strong>Owner (sha256):</strong> {project.owner}</p>
             {/if}
@@ -78,9 +109,12 @@
 
             <!-- User actions -->
             {#if $connected}
-                <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Buy</Button>
-                <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Increase Donation</Button>
-                <Button style="background-color: orange; color: black; border: none;" on:click={withdrawDonation}>Refund</Button>
+                {#if project.total_amount !== project.amount_sold}
+                    <Button style="background-color: orange; color: black; border: none;" on:click={buy}>Buy</Button>
+                {/if}
+                {#if deadline_passed && ! is_min_raised}
+                    <Button style="background-color: orange; color: black; border: none;" on:click={refund}>Refund</Button>
+                {/if}
             {/if}
 
             <!-- General actions -->
