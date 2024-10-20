@@ -35,7 +35,8 @@ interface Project {  // TODO Should be imported.
     minimum_amount: number,
     total_amount: number,
     exchange_rate: number, 
-    link: string
+    link: string,
+    owner: string
 }
 
 
@@ -81,7 +82,8 @@ export async function fetch_projects(explorer_uri: string, ergo_tree_template_ha
                         minimum_amount: parseInt(hexToUtf8(e.additionalRegisters.R5.renderedValue), 10),
                         total_amount: e.assets[0].amount,
                         exchange_rate: parseInt(hexToUtf8(e.additionalRegisters.R6.renderedValue), 10),
-                        link: hexToUtf8(e.additionalRegisters.R9.renderedValue) ?? ""
+                        link: hexToUtf8(e.additionalRegisters.R9.renderedValue) ?? "",
+                        owner: hexToUtf8(e.additionalRegisters.R7.renderedValue) ?? ""
                     })
                 }                
                 params.offset += params.limit;

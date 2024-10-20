@@ -7,6 +7,7 @@ import {
 
 import { ergo_tree_address } from './envs';
 import { stringToSerialized, tupleToSerialized } from './utils';
+import { sha256 } from './sha256';
 
 // Function to submit a project to the blockchain
 export async function submit_project(
@@ -44,7 +45,7 @@ export async function submit_project(
         R4: stringToSerialized(blockLimit.toString()),                 // Block limit for withdrawals/refunds
         R5: tupleToSerialized(minimumSold.toString(), "0"),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
         R6: stringToSerialized(exchangeRate.toString()),               // Exchange rate ERG/Token
-        R7: stringToSerialized(walletPk),                              // Withdrawal address (hash of walletPk)
+        R7: stringToSerialized(await sha256(walletPk)),               // Withdrawal address (hash of walletPk)
         R8: tupleToSerialized(
             devFeePercentage.toString(), 
             devAddress

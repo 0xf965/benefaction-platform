@@ -9,7 +9,8 @@
         minimum_amount: number,
         total_amount: number,
         exchange_rate: number, 
-        link: string
+        link: string,
+        owner: string
     }
 
     // Define 'project' as a prop of type Project

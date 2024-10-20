@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { project_detail } from "$lib/store";
+    import { sha256 } from "$lib/sha256";
+    import { address, connected, project_detail } from "$lib/store";
 
     interface Project {
         token_id: string;
@@ -8,6 +9,7 @@
         total_amount: number;
         exchange_rate: number; 
         link: string;
+        owner: string
     }
 
     // Define 'project' as a prop of type Project
@@ -36,6 +38,12 @@
     function closePage() {
         project_detail.set(null);
     }
+
+    let is_owner = false;
+    async function checkIfIsOwner() {
+        is_owner = $connected && await sha256($address ?? "") === project.owner;
+    }
+    checkIfIsOwner();
 </script>
 
 <!-- Main Project Detail Page -->
@@ -47,10 +55,25 @@
 
     <!-- Action Buttons -->
     <div class="actions">
-        <button class="btn-primary" on:click={closePage}>X</button>
-        <button class="btn-primary" on:click={increaseDonation}>Increase Donation</button>
-        <button class="btn-primary" on:click={withdrawDonation}>Withdraw Donation</button>
+        <!-- Project owner actions -->
+        {#if is_owner}
+            <button class="btn-primary" on:click={increaseDonation}>Add tokens</button>
+            <button class="btn-primary" on:click={withdrawDonation}>Withdraw ERGs</button>
+        {:else}
+            <p><strong>Owner (sha256):</strong> {project.owner}</p>
+        {/if}
+
+
+        <!-- User actions -->
+        {#if $connected}
+            <button class="btn-primary" on:click={increaseDonation}>Buy</button>
+            <button class="btn-primary" on:click={increaseDonation}>Increase Donation</button>
+            <button class="btn-primary" on:click={withdrawDonation}>Refund</button>
+        {/if}
+
+        <!-- General actions -->
         <button class="btn-primary" on:click={shareProject}>Share</button>
+        <button class="btn-secondary" on:click={closePage}>Go to main</button>
     </div>
 </div>
 

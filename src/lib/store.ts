@@ -6,7 +6,8 @@ interface Project {
     minimum_amount: number,
     total_amount: number,
     exchange_rate: number, 
-    link: string
+    link: string,
+    owner: string
 }
 
 export const address = writable<string|null>(null);
