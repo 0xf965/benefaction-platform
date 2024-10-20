@@ -119,6 +119,42 @@
         is_owner = $connected && await sha256($address ?? "") === project.owner;
     }
     checkIfIsOwner();
+
+    // TODO Poner datos reales
+    let targetDate = new Date(2024, 11, 2, 0, 0, 0).getTime();
+
+    function updateCountdown() {
+        var currentDate = new Date().getTime();
+        var diff = targetDate - currentDate;
+
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        // Asignamos los valores a los elementos del DOM
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+
+        // Verificamos que los elementos existen antes de asignarles valores
+        if (daysElement) {
+            daysElement.innerHTML = days.toString();
+        }
+        if (hoursElement) {
+            hoursElement.innerHTML = hours.toString();
+        }
+        if (minutesElement) {
+            minutesElement.innerHTML = minutes.toString();
+        }
+        if (secondsElement) {
+            secondsElement.innerHTML = seconds.toString();
+        }
+    }
+
+    var countdownInterval = setInterval(updateCountdown, 1000);
+
 </script>
 
 <div class="back">
@@ -196,6 +232,27 @@
     </div>
 
     <div class="extra">
+        <div class="timeleft">
+            <span>TIME LEFT:</span>
+            <div class="responsive1">
+                <div class="item">
+                    <div id="days"></div>
+                    <div class="h3"><h3>Días</h3></div>
+                </div>
+                <div class="item">
+                    <div id="hours"></div>
+                    <div class="h3"><h3>Horas</h3></div>
+                </div>
+                <div class="item">
+                    <div id="minutes"></div>
+                    <div class="h3"><h3>Minutos</h3></div>
+                </div>
+                <div class="item">
+                    <div id="seconds"></div>
+                    <div class="h3"><h3>Segundos</h3></div>
+                </div>
+            </div>
+        </div>
         <div class="progress">
             <Progress value="{percentage}" type="{typeProgress}" style="color: black;">Current: {currentVal}</Progress>
         </div>
@@ -221,10 +278,6 @@
         color: #ddd;
         display: flex;
         flex-direction: row;
-    }
-
-    .extra {
-        width: 800px;
     }
 
     .btn-close {
@@ -254,5 +307,40 @@
 
     .btn-primary:hover {
         background-color: #ffeb3b; /* Lighter yellow on hover */
+    }
+
+    .extra {
+        width: 1000px;
+    }
+
+    .timeleft {
+        margin-bottom: 50px;
+    }
+
+    .timeleft>span{
+        font-size: 30px;
+    }
+
+    .item {
+        width: 100px;
+        height: 100px;
+        padding: 10px 0px 5px 0px;
+        text-align: center;
+        display: inline-block;
+        margin: 5px;
+        border: 3px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .item>div{
+        font-size: 40px;
+        animation: fade 3s;
+        line-height: 30px;
+        margin-top: 5px;
+    }
+    .item>div>h3 {
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: normal;
     }
 </style>
