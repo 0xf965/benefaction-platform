@@ -5,7 +5,7 @@
 * R5     -> tuple[Q, N] where   Q: the minimum amount of tokens that need to be sold.   N: the amount of tokens that have already been sold.
 * R6     -> ERG/Token exchange rate
 * R7     -> Sha256 of the contract proposition bytes where the funds can be withdrawn
-* R8     -> devFee  tuple[%, contract proposition bytes]
+* R8     -> contract proposition bytes
 * R9     -> Link or hash that contains project information
 */
 {
@@ -29,8 +29,8 @@
     // The project address must remain the same
     val sameProjectAddress = SELF.R7[Coll[Byte]].get == OUTPUTS(0).R7[Coll[Byte]].get
 
-    // The dev fee must be the same
-    val sameDevFee = SELF.R8[(Int, Coll[Byte])].get == OUTPUTS(0).R8[(Int, Coll[Byte])].get  // TODO Maybe, the devFee could be a constant.
+    // The dev address must be the same
+    val sameDevFee = SELF.R8[Coll[Byte]].get == OUTPUTS(0).R8[Coll[Byte]].get
 
     // The project link must be the same
     val sameProjectLink = SELF.R9[Coll[Byte]].get == OUTPUTS(0).R9[Coll[Byte]].get
@@ -160,9 +160,8 @@
 
     val correctDevFee = {
       // Could be a dev prop bytes: https://github.com/PhoenixErgo/phoenix-hodlcoin-contracts/blob/main/hodlERG/contracts/phoenix_fee_contract/v1/ergoscript/phoenix_v1_hodlerg_fee.es
-      val devData = OUTPUTS(0).R8[(Int, Coll[Byte])].get
-      val devFee = devData._1
-      val devAddress = devData._2
+      val devFee = 5
+      val devAddress = OUTPUTS(0).R8[Coll[Byte]].get
 
       val isToDevAddress = {
         devAddress == OUTPUTS(2).propositionBytes

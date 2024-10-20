@@ -2,11 +2,15 @@ import {
     OutputBuilder,
     SAFE_MIN_BOX_VALUE,
     RECOMMENDED_MIN_FEE_VALUE,
-    TransactionBuilder
+    TransactionBuilder,
+    SConstant,
+    SLong,
+    SColl,
+    SByte
 } from '@fleet-sdk/core';
 
 import { ergo_tree_address } from './envs';
-import { stringToSerialized, tupleToSerialized } from './utils';
+import { stringToSerialized } from './utils';
 import { sha256 } from './sha256';
 
 // Function to submit a project to the blockchain
@@ -43,13 +47,16 @@ export async function submit_project(
     // Set additional registers in the output box
     projectOutput.setAdditionalRegisters({
         R4: stringToSerialized(blockLimit.toString()),                 // Block limit for withdrawals/refunds
-        R5: tupleToSerialized(minimumSold.toString(), "0"),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
+        R5: SConstant(SColl(
+            SByte,
+            [
+                SLong(BigInt(minimumSold)), 
+                SLong(BigInt(0))
+            ]
+        )),          // tuple[Minimum sold, tokens already sold] - starts with 0 sold
         R6: stringToSerialized(exchangeRate.toString()),               // Exchange rate ERG/Token
         R7: stringToSerialized(await sha256(walletPk)),               // Withdrawal address (hash of walletPk)
-        R8: tupleToSerialized(
-            devFeePercentage.toString(), 
-            devAddress
-        ), // Developer fee tuple [percentage, address]
+        R8: stringToSerialized(devAddress), // Developer fee tuple [percentage, address]
         R9: stringToSerialized(projectLink)                            // Link or hash with project info
     });
 
