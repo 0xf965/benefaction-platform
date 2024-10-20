@@ -13,6 +13,8 @@
     let explorerUri: string = explorer_uri; // Cambia esto por el URI correcto
     let ergoTreeTemplateHash: string = ergo_tree_hash; // Cambia por el hash correcto
 
+    export let filterProject: ((project: any) => boolean) | null = null;
+
     // Function to fetch the projects
     async function loadProjects() {
         try {
@@ -70,10 +72,12 @@
     {#if projects && !isLoading}
         <div class="project-list">
             {#each Array.from(projects) as [projectId, projectData]}
-                <div class="card">
-                    <!-- Renderiza una tarjeta ProjectCard para cada projectData -->
-                    <ProjectCard project={projectData} />
-                </div>
+                {#if !filterProject || filterProject(projectData)}
+                    <div class="card">
+                        <!-- Renderiza una tarjeta ProjectCard para cada projectData -->
+                        <ProjectCard project={projectData} />
+                    </div>
+                {/if}
             {/each}
         </div>
     {:else if isLoading}
