@@ -2,6 +2,7 @@
     import { type Project, is_ended, min_raised } from "$lib/project";
     import { sha256 } from "$lib/sha256";
     import { address, connected, project_detail } from "$lib/store";
+    import { Button, Progress } from "spaper";
 
 
     // Define 'project' as a prop of type Project
@@ -47,47 +48,66 @@
     checkIfIsOwner();
 </script>
 
+<div class="back">
+    <Button class="btn-primary" on:click={closePage}>&lt; Go to main</Button>
+</div>
+
 <!-- Main Project Detail Page -->
 <div class="project-detail">
-    <p><strong>Block Limit:</strong> {project.block_limit}</p>
-    <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
-    <p><strong>Total Amount:</strong> {project.total_amount}</p>
-    <p><strong>Exchange Rate:</strong> {project.exchange_rate}</p>
-    <p><strong>ERGs collected:</strong> {project.reserve}</p>
-    <p><strong>Tokens sold:</strong> {project.amount_sold}</p>
-    <p><strong>Deadline passed:</strong> {deadline_passed ? "Yes": "No"}</p>
-    <p><strong>Min value raised:</strong> {is_min_raised ? "Yes": "No"}</p>
 
-    <!-- Action Buttons -->
-    <div class="actions">
-        <!-- Project owner actions -->
-        {#if is_owner}
-            <button class="btn-primary" on:click={increaseDonation}>Add tokens</button>
-            <button class="btn-primary" on:click={withdrawDonation}>Withdraw ERGs</button>
-        {:else}
-            <p><strong>Owner (sha256):</strong> {project.owner}</p>
-        {/if}
+    <div class="details">
+        <p><strong>Block Limit:</strong> {project.block_limit}</p>
+        <p><strong>Minimum Amount:</strong> {project.minimum_amount}</p>
+        <p><strong>Total Amount:</strong> {project.total_amount}</p>
+        <p><strong>Exchange Rate:</strong> {project.exchange_rate}</p>
+        <p><strong>ERGs collected:</strong> {project.reserve}</p>
+        <p><strong>Tokens sold:</strong> {project.amount_sold}</p>
+        <p><strong>Deadline passed:</strong> {deadline_passed ? "Yes": "No"}</p>
+        <p><strong>Min value raised:</strong> {is_min_raised ? "Yes": "No"}</p>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <!-- Project owner actions -->
+            {#if is_owner}
+                <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Add tokens</Button>
+                <Button style="background-color: orange; color: black; border: none;" on:click={withdrawDonation}>Withdraw ERGs</Button>
+            {:else}
+                <p><strong>Owner (sha256):</strong> {project.owner}</p>
+            {/if}
 
 
-        <!-- User actions -->
-        {#if $connected}
-            <button class="btn-primary" on:click={increaseDonation}>Buy</button>
-            <button class="btn-primary" on:click={increaseDonation}>Increase Donation</button>
-            <button class="btn-primary" on:click={withdrawDonation}>Refund</button>
-        {/if}
+            <!-- User actions -->
+            {#if $connected}
+                <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Buy</Button>
+                <Button style="background-color: orange; color: black; border: none;" on:click={increaseDonation}>Increase Donation</Button>
+                <Button style="background-color: orange; color: black; border: none;" on:click={withdrawDonation}>Refund</Button>
+            {/if}
 
-        <!-- General actions -->
-        <button class="btn-primary" on:click={shareProject}>Share</button>
-        <button class="btn-secondary" on:click={closePage}>Go to main</button>
+            <!-- General actions -->
+            <Button style="background-color: orange; color: black; border: none;" on:click={shareProject}>Share</Button>
+            
+        </div>
+    </div>
+
+    <div class="progress">
+        <Progress value="20" type="primary" />
     </div>
 </div>
 
 <style>
+    .back {
+        margin-top: 2rem;
+        margin-left: 3.5rem;
+        margin-bottom: 0rem;
+    }
 
     .project-detail {
-        margin: 2rem;
+        margin-left: 2rem;
         padding: 1.5rem;
         border-radius: 8px;
+        color: #ddd;
+        display: flex;
+        flex-direction: row;
     }
 
     .btn-close {
