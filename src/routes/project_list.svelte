@@ -58,17 +58,13 @@
 <div class="container">
     <h1><slot></slot></h1>
 
-    {#if isLoading}
-        <p>Loading projects...</p>
-    {/if}
-
     {#if errorMessage}
         <div class="error">
             <p>{errorMessage}</p>
         </div>
     {/if}
 
-    {#if projects && !isLoading}
+    {#if projects && Array.from(projects).length > 0 && !isLoading}
         <div class="project-list">
             {#each Array.from(projects) as [projectId, projectData]}
                 <div class="card">
@@ -93,6 +89,10 @@
         flex-wrap: wrap;
         gap: 1rem;
         justify-content: center;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 600px;
+        scrollbar-color: white black;
     }
 
     .card {
